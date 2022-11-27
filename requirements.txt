@@ -1,0 +1,10 @@
+flask
+psycopg2-binary
+Flask-SQLAlchemy
+requests
+
+pip install flask
+pip3 install flask-sqlalchemy
+pip install psycopg2-binary (para msc e linux)
+pip install requests
+

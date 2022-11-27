@@ -1,0 +1,233 @@
+-- Database: call
+
+-- DROP DATABASE IF EXISTS call;
+
+CREATE DATABASE call
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'pt_BR.UTF-8'
+    LC_CTYPE = 'pt_BR.UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+===================================================
+
+    -- SCHEMA: public
+
+-- DROP SCHEMA IF EXISTS public ;
+
+CREATE SCHEMA IF NOT EXISTS public
+    AUTHORIZATION postgres;
+
+COMMENT ON SCHEMA public
+    IS 'standard public schema';
+
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+GRANT ALL ON SCHEMA public TO postgres;
+
+
+===================================================================
+
+
+
+-- Table: public.admin
+
+-- DROP TABLE IF EXISTS public.admin;
+
+CREATE TABLE IF NOT EXISTS public.admin
+(
+    id integer NOT NULL DEFAULT nextval('admin_id_seq'::regclass),
+    description character varying(200) COLLATE pg_catalog."default",
+    CONSTRAINT admin_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.admin
+    OWNER to postgres;
+
+
+=========================================================================
+-- Table: public.call
+
+-- DROP TABLE IF EXISTS public.call;
+
+CREATE TABLE IF NOT EXISTS public.call
+(
+    id integer NOT NULL DEFAULT nextval('call_id_seq'::regclass),
+    dat_call timestamp without time zone,
+    id_user integer NOT NULL,
+    id_kind integer NOT NULL,
+    id_status integer NOT NULL,
+    description character varying(2000) COLLATE pg_catalog."default",
+    CONSTRAINT call_pkey PRIMARY KEY (id),
+    CONSTRAINT call_id_kind_fkey FOREIGN KEY (id_kind)
+        REFERENCES public.kind (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT call_id_status_fkey FOREIGN KEY (id_status)
+        REFERENCES public.status (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT call_id_user_fkey FOREIGN KEY (id_user)
+        REFERENCES public."user" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.call
+    OWNER to postgres;
+
+=================================================================================
+
+-- Table: public.kind
+
+-- DROP TABLE IF EXISTS public.kind;
+
+CREATE TABLE IF NOT EXISTS public.kind
+(
+    id integer NOT NULL DEFAULT nextval('kind_id_seq'::regclass),
+    description character varying(200) COLLATE pg_catalog."default",
+    CONSTRAINT kind_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.kind
+    OWNER to postgres;
+
+===============================================================================
+
+-- Table: public.status
+
+-- DROP TABLE IF EXISTS public.status;
+
+CREATE TABLE IF NOT EXISTS public.status
+(
+    id integer NOT NULL DEFAULT nextval('status_id_seq'::regclass),
+    description character varying(200) COLLATE pg_catalog."default",
+    CONSTRAINT status_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.status
+    OWNER to postgres;
+
+===============================================================================
+
+-- Table: public.user
+
+-- DROP TABLE IF EXISTS public."user";
+
+CREATE TABLE IF NOT EXISTS public."user"
+(
+    id integer NOT NULL DEFAULT nextval('user_id_seq'::regclass),
+    dat_user timestamp without time zone,
+    name character varying(500) COLLATE pg_catalog."default",
+    email character varying(500) COLLATE pg_catalog."default",
+    login character varying(200) COLLATE pg_catalog."default",
+    id_admin integer NOT NULL,
+    password character varying(200) COLLATE pg_catalog."default",
+    repeat_password character varying(200) COLLATE pg_catalog."default",
+    CONSTRAINT user_pkey PRIMARY KEY (id),
+    CONSTRAINT user_id_admin_fkey FOREIGN KEY (id_admin)
+        REFERENCES public.admin (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."user"
+    OWNER to postgres;
+
+===============================================================================
+
+-- SEQUENCE: public.admin_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.admin_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.admin_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY admin.id;
+
+ALTER SEQUENCE public.admin_id_seq
+    OWNER TO postgres;
+
+===============================================================================
+
+-- SEQUENCE: public.call_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.call_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.call_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY call.id;
+
+ALTER SEQUENCE public.call_id_seq
+    OWNER TO postgres;
+
+===============================================================================
+
+-- SEQUENCE: public.kind_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.kind_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.kind_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY kind.id;
+
+ALTER SEQUENCE public.kind_id_seq
+    OWNER TO postgres;
+
+===============================================================================
+
+-- SEQUENCE: public.status_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.status_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.status_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY status.id;
+
+ALTER SEQUENCE public.status_id_seq
+    OWNER TO postgres;
+
+===============================================================================
+
+-- SEQUENCE: public.user_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.user_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.user_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY "user".id;
+
+ALTER SEQUENCE public.user_id_seq
+    OWNER TO postgres;
